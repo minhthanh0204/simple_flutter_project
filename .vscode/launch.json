@@ -16,6 +16,12 @@
             "cwd": "frontend",
             "request": "launch",
             "type": "dart",
+        },
+        {
+            "name": "frontend-web",
+            "cwd": "frontend",
+            "request": "launch",
+            "type": "dart",
             "args": [
                 "-d",
                 "chrome",
