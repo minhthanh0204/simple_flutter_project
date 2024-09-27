@@ -54,20 +54,32 @@ Future<Response> _submitHandler(Request req) async {
     final payload = await req.readAsString();
     // Giải mã JSON từ payload
     final data = json.decode(payload);
-    // Lấy gía trị 'name' từ data, ép kiểu về String? nếu có
+    // Lấy gía trị 'name,studentid,date' từ data, ép kiểu về String? nếu có
     final name = data['name'] as String?;
-    // Kiểm tra nếu'name' hợp lệ
-    if (name != null && name.isNotEmpty) {
+    final studentId = data['studentId'] as String?;
+    final date = data['date'] as String?;
+    // Kiểm tra nếu'name,studentid,date' hợp lệ
+    if (name != null &&
+        name.isNotEmpty &&
+        !name.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>1234567890]')) &&
+        studentId != null &&
+        studentId.length < 11 &&
+        studentId.isNotEmpty &&
+        date != null &&
+        date.isNotEmpty) {
       // Tạo phản hồi chào mừng
-      final response = {'message': 'Chào mừng $name'};
+      final response = {
+        'message':
+            'Chào mừng đến với thông tin của bạn \n Tên: $name \n Mã Sinh viên: $studentId \n Ngày sinh:$date'
+      };
       // Trả về phản hồi với statusCode 200 và nội dung JSON
       return Response.ok(
         json.encode(response),
         headers: _headers,
       );
     } else {
-      //Tạo phản hồi yêu cầu cung cấp tên
-      final response = {'message': 'Server không nhận được tên của bạn.'};
+      //Tạo phản hồi yêu cầu cung cấp thông tin
+      final response = {'message': 'Server không nhận được thông tin của bạn.'};
       // Trả về phản hồi với statusCode 400 và nội dung JSON
       return Response.badRequest(
         body: json.encode(response),
